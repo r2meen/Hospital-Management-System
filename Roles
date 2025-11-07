@@ -1,0 +1,25 @@
+Member	Role	Responsibilities:
+
+Rameen
+- Design and implement the main menu (Add/Search/Update/Delete/Exit).
+- Create input/output display functions.
+- Handle user input validation.
+- Create patient and doctor record input forms.
+- Work on the display of search and report results.
+- Integrate functions from other modules into one main program.
+- Write Chapter 1 (Introduction) of the report.
+
+Eifa 
+- Create struct definitions for Patient, Doctor, Appointment, and Bill.
+- Implement CRUD operations (Create, Read, Update, Delete) for patients and doctors.
+- Develop file handling functions (read/write/update/delete from files).
+- Handle appointment scheduling (link patient to doctor).
+- Ensure data persistence in .txt or .dat files.
+- Write Chapter 2 (Methodology) and Chapter 3 (Tools & Platforms) of the report.
+
+Yusra 
+- Design and implement Billing Module (calculate patient bill, store billing records).
+- Test all modules using at least 5 test cases and capture screenshots.
+- Debug and verify all file operations.
+- Write Chapter 4 (Results) and Chapter 5 (Conclusion & Future Work).
+- Format the final MS Word report (title page, TOC, references).
