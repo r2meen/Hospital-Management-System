@@ -1,0 +1,547 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+/* ===========================
+   STRUCT DEFINITIONS
+   =========================== */
+struct Patient {
+    int id;
+    char firstName[30];
+    char lastName[30];
+    char fullName[60];
+    int age;
+    char gender[10];
+    char disease[50];
+    char doctorAssigned[50];
+};
+
+struct Doctor {
+    int id;
+    char firstName[30];
+    char lastName[30];
+    char fullName[60];
+    char specialization[50];
+    char timings[30];
+};
+
+struct Appointment {
+    int patientID;
+    int doctorID;
+    char date[15];
+    char time[10];
+};
+
+/* ===========================
+   FUNCTION DECLARATIONS
+   =========================== */
+void addPatient();          
+void searchPatient();       
+void updatePatient();       
+void deletePatient();       
+void addDoctor();           
+void searchDoctor();        
+void createAppointment();   
+void generateBill();        
+void displayReports();      
+void displayMenu();         
+int checkDuplicateID(int);
+void displayPatientByID(int);
+
+/* ===========================
+   MAIN
+   =========================== */
+int main() {
+    int choice;
+
+    do {
+        displayMenu(); 
+
+        printf("Enter your choice (1-10): ");
+
+        if (scanf("%d", &choice) != 1) {   
+            printf("Invalid input! Please enter a number.\n");
+            while (getchar() != '\n');
+            continue;
+        }
+
+        switch (choice) {
+            case 1:
+              addPatient(); 
+            break;
+
+            case 2: 
+              searchPatient(); 
+            break;
+
+            case 3:
+              updatePatient(); 
+            break;
+
+            case 4: 
+              deletePatient();
+            break;
+
+            case 5: 
+              printf("addDoctor()");
+            break;
+
+            case 6:
+              printf("searchDoctor()");
+            break;
+
+            case 7: 
+             printf(" createAppointment()"); 
+            break;
+
+            case 8:
+             printf( "generateBill() "); 
+            break;
+
+            case 9: 
+              printf("displayReports()");
+            break;
+
+            case 10:
+                printf("\nExiting program... Thank you!\n");
+                break;
+
+            default:
+                printf("\nInvalid choice! Please select from 1–10.\n");
+        }
+
+        printf("\nPress Enter to continue...");
+        while (getchar() != '\n'); 
+        getchar();                          
+
+    } while (choice != 10);
+
+    return 0;
+}
+
+/* ===========================
+   CHECK DUPLICATE ID
+   =========================== */
+int checkDuplicateID(int inputID)
+{
+    FILE *fp = fopen("patients.txt", "r");
+    if (!fp) return 0;
+
+    struct Patient p;
+
+    while (fscanf(fp, "%d,%29[^,],%29[^,],%59[^,],%d,%9[^,],%49[^,],%49[^\n]\n",
+                  &p.id, p.firstName, p.lastName, p.fullName,
+                  &p.age, p.gender, p.disease, p.doctorAssigned) == 8)
+    {
+        if (p.id == inputID) {
+            fclose(fp);
+            return 1;
+        }
+    }
+
+    fclose(fp);
+    return 0;
+}
+
+/* ===========================
+   ADD PATIENT
+   =========================== */
+void addPatient()
+{
+    int inputID;
+    struct Patient p;
+    FILE *fp = fopen("patients.txt", "a");
+    if (!fp)
+    {
+        printf("Error opening file!\n");
+        return;
+    }
+    do{
+        printf("Enter Patient's ID: ");
+        scanf("%d", &inputID);
+        if(checkDuplicateID(inputID)){
+            printf("Patient ID %d already exists!\nEnter a different ID.\n",inputID);
+        }
+        else{
+            p.id=inputID;
+            break;
+        }
+    }while(1);
+
+    printf("Enter Patient's Name\n");
+    printf("First name: ");
+    scanf("%s", p.firstName);
+    printf("Last name: ");
+    scanf("%s", p.lastName);
+
+    int i = 0;
+    while (p.firstName[i] != '\0')
+    {
+        p.fullName[i] = p.firstName[i];
+        i++;
+    }
+    p.fullName[i] = ' ';
+    i++;
+    int j = 0;
+    while (p.lastName[j] != '\0')
+    {
+        p.fullName[i++] = p.lastName[j];
+        j++;
+    }
+    p.fullName[i] = '\0';
+    getchar();
+
+    printf("Enter Patient's Age: ");
+    scanf("%d", &p.age);
+    if(p.age<0)
+    {
+        printf("Enter valid age!\n");
+        scanf("%d",&p.age);
+    }
+    getchar();
+    printf("Enter Patient's Gender: ");
+    scanf("%s", p.gender);
+    getchar();
+    printf("Enter Patient's Disease: ");
+    scanf("%[^\n]%*c", p.disease);
+    printf("Enter doctor assigned: ");
+    scanf("%[^\n]%*c", p.doctorAssigned);
+
+    printf("\nNew Patient's Data\n");
+    printf("Patient's ID: %d\n", p.id);
+    printf("First Name: %s\n", p.firstName);
+    printf("Last Name: %s\n", p.lastName);
+    printf("Full Name: %s\n", p.fullName);
+    printf("Age: %d\n", p.age);
+    printf("Gender: %s\n", p.gender);
+    printf("Disease: %s\n", p.disease);
+    printf("Doctor Assigned: %s\n", p.doctorAssigned);
+
+    int c; while ((c = getchar()) != '\n' && c != EOF); // clear buffer
+    char confirm;
+    scanf("%c", &confirm);
+
+    if (confirm == 'Y' || confirm=='y'){
+        fprintf(fp, "%d,%s,%s,%s,%d,%s,%s,%s\n",
+                p.id, p.firstName, p.lastName, p.fullName,
+                p.age, p.gender, p.disease, p.doctorAssigned);
+        printf("Patient added successfully!\n");
+    }
+    else
+        printf("Add cancelled!\n");
+
+    fclose(fp);
+}
+
+/* ===========================
+   DISPLAY PATIENT BY ID
+   =========================== */
+void displayPatientByID(int id)
+{
+    struct Patient p;
+    FILE *fp = fopen("patients.txt", "r");
+    if (!fp) { printf("Error opening file!\n"); return; }
+
+    int found = 0;
+
+    while (fscanf(fp, "%d,%[^,],%[^,],%[^,],%d,%[^,],%[^,],%[^\n]\n",
+                  &p.id, p.firstName, p.lastName, p.fullName,
+                  &p.age, p.gender, p.disease, p.doctorAssigned) != EOF)
+    {
+        if (p.id == id)
+        {
+            printf("\nPatient Found:\n");
+            printf("-----------------------------\n");
+            printf("ID: %d\n", p.id);
+            printf("Name: %s\n", p.fullName);
+            printf("Age: %d\n", p.age);
+            printf("Gender: %s\n", p.gender);
+            printf("Disease: %s\n", p.disease);
+            printf("Doctor: %s\n", p.doctorAssigned);
+            printf("-----------------------------\n");
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) printf("No patient found with ID %d\n", id);
+
+    fclose(fp);
+}
+
+/* ===========================
+   SEARCH PATIENT
+   =========================== */
+void searchPatient()
+{
+    int choice, found = 0, inputId;
+    struct Patient p;
+    char name[60];
+    printf("\n====== SEARCH PATIENT ======\n");
+    printf("1. Search by ID\n");
+    printf("2. Search by Name\n");
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
+    FILE *fp = fopen("patients.txt", "r");
+    if (!fp)
+    {
+        printf("Error opening file!\n");
+        return;
+    }
+    if (choice == 1)
+    {
+        printf("Enter the patient ID to search: ");
+        scanf("%d", &inputId);
+        getchar();
+        displayPatientByID(inputId);
+    }
+    else if (choice == 2)
+    {
+        getchar();
+        printf("Enter the patient's name to search: ");
+        scanf("%[^\n]%*c", name);
+        while (fscanf(fp, "%d,%[^,],%[^,],%[^,],%d,%[^,],%[^,],%[^\n]\n",
+                      &p.id, p.firstName, p.lastName, p.fullName,
+                      &p.age, p.gender, p.disease, p.doctorAssigned) != EOF)
+        {
+            if (strstr(p.fullName, name) != NULL ||
+                strstr(p.firstName, name) != NULL ||
+                strstr(p.lastName, name) != NULL)
+            {
+                printf("\nPatient Found!\n");
+                printf("-----------------------------\n");
+                printf("ID              : %d\n", p.id);
+                printf("Full Name       : %s\n", p.fullName);
+                printf("Age             : %d\n", p.age);
+                printf("Gender          : %s\n", p.gender);
+                printf("Disease         : %s\n", p.disease);
+                printf("Doctor Assigned : %s\n", p.doctorAssigned);
+                printf("-----------------------------\n");
+                found = 1;
+            }
+        }
+        if (!found)
+            printf("No patient found with this name %s\n", name);
+    }
+    else
+        printf("Invalid choice! Please enter 1 or 2.\n");
+    fclose(fp);
+}
+
+/* ===========================
+   UPDATE PATIENT
+   =========================== */
+void updatePatient()
+{
+    int updateID, found = 0, choice;
+    struct Patient p;
+
+    FILE *fp = fopen("patients.txt", "r");
+    FILE *temp = fopen("temp.txt", "w");
+
+    if (!fp || !temp) {
+        printf("Error opening file!\n");
+        return;
+    }
+
+    printf("\n====== UPDATE PATIENT ======\n");
+    printf("Enter Patient ID to update: ");
+    scanf("%d", &updateID);
+
+    displayPatientByID(updateID);
+
+    while (fscanf(fp, "%d,%[^,],%[^,],%[^,],%d,%[^,],%[^,],%[^\n]\n",
+                  &p.id, p.firstName, p.lastName, p.fullName,
+                  &p.age, p.gender, p.disease, p.doctorAssigned) != EOF)
+    {
+        if (p.id == updateID) {
+            found = 1;
+
+            struct Patient original = p;
+
+            printf("\nWhich field do you want to update?\n");
+            printf("1. Name\n");
+            printf("2. Age\n");
+            printf("3. Gender\n");
+            printf("4. Disease\n");
+            printf("5. Doctor Assigned\n");
+            printf("6. Cancel\n");
+            printf("Enter choice: ");
+            scanf("%d", &choice);
+            getchar();
+
+            switch (choice) {
+            case 1:
+                printf("Enter new First Name: ");
+                scanf("%s", p.firstName);
+
+                printf("Enter new Last Name: ");
+                scanf("%s", p.lastName);
+
+                // replace sprintf with manual concat
+                int i=0; 
+                while(p.firstName[i]!='\0'){p.fullName[i]=p.firstName[i]; i++;} 
+                p.fullName[i]=' '; i++; 
+                int j=0; 
+                while(p.lastName[j]!='\0'){p.fullName[i++]=p.lastName[j]; j++;} 
+                p.fullName[i]='\0';
+                break;
+
+            case 2:
+                printf("Enter new Age: ");
+                scanf("%d", &p.age);
+                break;
+
+            case 3:
+                printf("Enter new Gender: ");
+                scanf("%s", p.gender);
+                break;
+
+            case 4:
+                printf("Enter new Disease: ");
+                scanf(" %[^\n]", p.disease);
+                break;
+
+            case 5:
+                printf("Enter new Doctor Assigned: ");
+                scanf(" %[^\n]", p.doctorAssigned);
+                break;
+
+            case 6:
+                printf("Update cancelled.\n");
+                p = original;
+                break;
+
+            default:
+                printf("Invalid choice! Keeping old data.\n");
+                p = original;
+            }
+
+            int c; while ((c = getchar()) != '\n' && c != EOF); // clear buffer
+            char confirm;
+            scanf("%c", &confirm);
+
+            if (!(confirm == 'Y' || confirm == 'y')) {
+                p = original;
+                printf("Update cancelled.\n");
+            } else {
+                printf("Record Updated Successfully!\n");
+            }
+        }
+
+        fprintf(temp, "%d,%s,%s,%s,%d,%s,%s,%s\n",
+                p.id, p.firstName, p.lastName, p.fullName,
+                p.age, p.gender, p.disease, p.doctorAssigned);
+    }
+
+    fclose(fp);
+    fclose(temp);
+
+    remove("patients.txt");
+    rename("temp.txt", "patients.txt");
+
+    if (!found)
+        printf("\nNo patient found with ID %d\n", updateID);
+}
+
+/* ===========================
+   DELETE PATIENT (with confirmation)
+   =========================== */
+void deletePatient()
+{
+    int deleteID, found = 0;
+    struct Patient p, toDelete;
+
+    FILE *fp = fopen("patients.txt", "r");
+    FILE *temp = fopen("temp.txt", "w");
+
+    if (!fp || !temp) {
+        printf("Error opening file!\n");
+        return;
+    }
+
+    printf("\n====== DELETE PATIENT ======\n");
+    printf("Enter Patient ID to delete: ");
+    scanf("%d", &deleteID);
+
+    while (fscanf(fp, "%d,%[^,],%[^,],%[^,],%d,%[^,],%[^,],%[^\n]\n",
+                  &p.id, p.firstName, p.lastName, p.fullName,
+                  &p.age, p.gender, p.disease, p.doctorAssigned) != EOF)
+    {
+        if (p.id == deleteID)
+        {
+            found = 1;
+            toDelete = p;
+
+            printf("\nPatient Found!\n");
+            printf("-----------------------------\n");
+            printf("ID              : %d\n", toDelete.id);
+            printf("Full Name       : %s\n", toDelete.fullName);
+            printf("Age             : %d\n", toDelete.age);
+            printf("Gender          : %s\n", toDelete.gender);
+            printf("Disease         : %s\n", toDelete.disease);
+            printf("Doctor Assigned : %s\n", toDelete.doctorAssigned);
+            printf("-----------------------------\n");
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("\nNo patient found with ID %d\n", deleteID);
+        fclose(fp);
+        fclose(temp);
+        remove("temp.txt");
+        return;
+    }
+
+    int c; while ((c = getchar()) != '\n' && c != EOF); // clear buffer
+    char confirm;
+    scanf("%c", &confirm);
+
+    if (!(confirm == 'Y' || confirm == 'y')) {
+        printf("\nDeletion Cancelled.\n");
+        fclose(fp);
+        fclose(temp);
+        remove("temp.txt");
+        return;
+    }
+
+    rewind(fp);
+
+    while (fscanf(fp, "%d,%[^,],%[^,],%[^,],%d,%[^,],%[^,],%[^\n]\n",
+        &p.id, p.firstName, p.lastName, p.fullName,
+        &p.age, p.gender, p.disease, p.doctorAssigned) != EOF)
+    {
+        if (p.id == deleteID)
+            continue;
+
+        fprintf(temp, "%d,%s,%s,%s,%d,%s,%s,%s\n",
+                p.id, p.firstName, p.lastName, p.fullName,
+                p.age, p.gender, p.disease, p.doctorAssigned);
+    }
+
+    fclose(fp);
+    fclose(temp);
+
+    remove("patients.txt");
+    rename("temp.txt", "patients.txt");
+
+    printf("\nRecord Deleted Successfully!\n");
+}
+
+void displayMenu() {
+    printf("\n===========================================\n");
+    printf("         HOSPITAL MANAGEMENT SYSTEM! \n");
+    printf("===========================================\n");
+    printf("1  - Add Patient\n");
+    printf("2  - Search Patient\n");
+    printf("3  - Update Patient\n");
+    printf("4  - Delete Patient\n");
+    printf("5  - Add Doctor\n");
+    printf("6  - Search Doctor\n");
+    printf("7  - Create Appointment\n");
+    printf("8  - Generate Bill\n");
+    printf("9  - Display Reports\n");
+    printf("10 - Exit\n");
+    printf("===========================================\n");
+}

@@ -75,7 +75,7 @@ int main() {
         printf("\nPress Enter to continue...");
         while (getchar() != '\n'); 
         getchar();                
-        clearScreen();            
+       // clearScreen();            
 
     } while (choice != 10);
 

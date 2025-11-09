@@ -1,2 +1,7 @@
 101,Sarah,adams,Sarah adams,16,Female,headache,steve jobs
 111,jane,watson,ane,17,male,stomache,jack
+111,sara,adams,13,female,malaria,adam
+111,ella,ref,12,female,malaria,flora
+111,ella,watson,34,female,malaria,sam
+112,rem,lee,rem lee,23,male,dengue,lura
+11,larry,jeff,larry jeff,32,male,fever,tom
