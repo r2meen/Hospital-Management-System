@@ -1,0 +1,83 @@
+void createAppointment()
+{
+  struct Appointment app;
+  struct Patient p;
+  int found = 0;
+
+  printf("\n====== CREATE APPOINTMENT ======\n");
+
+  // Get patient ID
+  printf("Enter Patient ID: ");
+  scanf("%d", &app.patientID);
+
+  // Verify patient exists
+  FILE *fp = fopen("patients.txt", "r");
+  if (fp)
+  {
+    while (fscanf(fp, "%d,%[^,],%[^,],%[^,],%d,%[^,],%[^,],%[^\n]\n",
+                  &p.id, p.firstName, p.lastName, p.fullName,
+                  &p.age, p.gender, p.disease, p.doctorAssigned) != EOF)
+    {
+      if (p.id == app.patientID)
+      {
+        found = 1;
+        printf("Patient Found: %s\n", p.fullName);
+        break;
+      }
+    }
+    fclose(fp);
+  }
+
+  if (!found)
+  {
+    printf("Patient ID not found!\n");
+    return;
+  }
+
+  // Show available doctors
+  if (doctorCount == 0)
+  {
+    printf("No doctors available!\n");
+    return;
+  }
+
+  printf("\nAvailable Doctors:\n");
+  for (int i = 0; i < doctorCount; i++)
+  {
+    printf("%d. %s (%s) - %s\n", doctors[i].id, doctors[i].name,
+           doctors[i].specialty, doctors[i].timings);
+  }
+
+  printf("\nEnter Doctor ID: ");
+  scanf("%d", &app.doctorID);
+
+  if (app.doctorID < 1 || app.doctorID > doctorCount)
+  {
+    printf("Invalid Doctor ID!\n");
+    return;
+  }
+
+  printf("Enter Appointment Date (DD-MM-YYYY): ");
+  scanf(" %[^\n]", app.date);
+
+  printf("Enter Appointment Time (e.g., 10:00 AM): ");
+  scanf(" %[^\n]", app.time);
+
+  // Save appointment to file
+  FILE *appFile = fopen("appointments.txt", "a");
+  if (!appFile)
+  {
+    printf("Error opening appointments file!\n");
+    return;
+  }
+
+  fprintf(appFile, "%d,%d,%s,%s\n", app.patientID, app.doctorID, app.date, app.time);
+  fclose(appFile);
+
+  printf("\n--- Appointment Created Successfully! ---\n");
+  printf("Patient: %s\n", p.fullName);
+  printf("Doctor: %s\n", doctors[app.doctorID - 1].name);
+  printf("Date: %s\n", app.date);
+  printf("Time: %s\n", app.time);
+  printf("Fee: %d\n", doctors[app.doctorID - 1].fee);
+}
