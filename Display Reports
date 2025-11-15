@@ -1,0 +1,159 @@
+void displayReports()
+{
+  int choice;
+
+  printf("\n====== DISPLAY REPORTS ======\n");
+  printf("1. All Patients Report\n");
+  printf("2. All Doctors Report\n");
+  printf("3. All Appointments Report\n");
+  printf("4. Patient Count by Disease\n");
+  printf("5. Back to Main Menu\n");
+  printf("Enter choice: ");
+  scanf("%d", &choice);
+
+  switch (choice)
+  {
+  case 1: // All Patients Report
+  {
+    struct Patient p;
+    FILE *fp = fopen("patients.txt", "r");
+    if (!fp)
+    {
+      printf("No patient records found!\n");
+      return;
+    }
+
+    printf("\n========== ALL PATIENTS REPORT ==========\n");
+    printf("%-5s %-25s %-5s %-10s %-20s %-20s\n",
+           "ID", "Name", "Age", "Gender", "Disease", "Doctor");
+    printf("------------------------------------------------------------------------\n");
+
+    int count = 0;
+    while (fscanf(fp, "%d,%[^,],%[^,],%[^,],%d,%[^,],%[^,],%[^\n]\n",
+                  &p.id, p.firstName, p.lastName, p.fullName,
+                  &p.age, p.gender, p.disease, p.doctorAssigned) != EOF)
+    {
+      printf("%-5d %-25s %-5d %-10s %-20s %-20s\n",
+             p.id, p.fullName, p.age, p.gender, p.disease, p.doctorAssigned);
+      count++;
+    }
+
+    printf("------------------------------------------------------------------------\n");
+    printf("Total Patients: %d\n", count);
+    fclose(fp);
+    break;
+  }
+
+  case 2: // All Doctors Report
+  {
+    if (doctorCount == 0)
+    {
+      printf("No doctor records found!\n");
+      return;
+    }
+
+    printf("\n========== ALL DOCTORS REPORT ==========\n");
+    printf("%-5s %-25s %-20s %-15s %-10s\n",
+           "ID", "Name", "Specialty", "Timings", "Fee");
+    printf("------------------------------------------------------------------------\n");
+
+    for (int i = 0; i < doctorCount; i++)
+    {
+      printf("%-5d %-25s %-20s %-15s %-10d\n",
+             doctors[i].id, doctors[i].name, doctors[i].specialty,
+             doctors[i].timings, doctors[i].fee);
+    }
+
+    printf("------------------------------------------------------------------------\n");
+    printf("Total Doctors: %d\n", doctorCount);
+    break;
+  }
+
+  case 3: // All Appointments Report
+  {
+    struct Appointment app;
+    FILE *fp = fopen("appointments.txt", "r");
+    if (!fp)
+    {
+      printf("No appointment records found!\n");
+      return;
+    }
+
+    printf("\n========== ALL APPOINTMENTS REPORT ==========\n");
+    printf("%-12s %-12s %-15s %-15s\n",
+           "Patient ID", "Doctor ID", "Date", "Time");
+    printf("--------------------------------------------------------\n");
+
+    int count = 0;
+    while (fscanf(fp, "%d,%d,%[^,],%[^\n]\n",
+                  &app.patientID, &app.doctorID, app.date, app.time) != EOF)
+    {
+      printf("%-12d %-12d %-15s %-15s\n",
+             app.patientID, app.doctorID, app.date, app.time);
+      count++;
+    }
+
+    printf("--------------------------------------------------------\n");
+    printf("Total Appointments: %d\n", count);
+    fclose(fp);
+    break;
+  }
+
+  case 4: // Patient Count by Disease
+  {
+    struct Patient p;
+    FILE *fp = fopen("patients.txt", "r");
+    if (!fp)
+    {
+      printf("No patient records found!\n");
+      return;
+    }
+
+    char diseases[100][50];
+    int counts[100] = {0};
+    int diseaseCount = 0;
+
+    while (fscanf(fp, "%d,%[^,],%[^,],%[^,],%d,%[^,],%[^,],%[^\n]\n",
+                  &p.id, p.firstName, p.lastName, p.fullName,
+                  &p.age, p.gender, p.disease, p.doctorAssigned) != EOF)
+    {
+      int found = 0;
+      for (int i = 0; i < diseaseCount; i++)
+      {
+        if (strcmp(diseases[i], p.disease) == 0)
+        {
+          counts[i]++;
+          found = 1;
+          break;
+        }
+      }
+
+      if (!found)
+      {
+        strcpy(diseases[diseaseCount], p.disease);
+        counts[diseaseCount] = 1;
+        diseaseCount++;
+      }
+    }
+
+    printf("\n========== PATIENT COUNT BY DISEASE ==========\n");
+    printf("%-30s %s\n", "Disease", "Count");
+    printf("-------------------------------------------\n");
+
+    for (int i = 0; i < diseaseCount; i++)
+    {
+      printf("%-30s %d\n", diseases[i], counts[i]);
+    }
+
+    printf("-------------------------------------------\n");
+    fclose(fp);
+    break;
+  }
+
+  case 5:
+    return;
+
+  default:
+    printf("Invalid choice!\n");
+  }
+}
