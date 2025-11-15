@@ -1,0 +1,38 @@
+void searchDoctor()
+{
+  int choice;
+
+  printf("\n====== SEARCH DOCTOR ======\n");
+  printf("1. List All Doctors\n");
+  printf("2. Show Doctor Details by ID\n");
+  printf("3. List Doctors by Specialty\n");
+  printf("4. Search Doctor by Keyword\n");
+  printf("5. Back to Main Menu\n");
+  printf("Enter choice: ");
+  scanf("%d", &choice);
+
+  switch (choice)
+  {
+  case 1:
+    listAllDoctors();
+    break;
+  case 2:
+  {
+    int id;
+    printf("Enter Doctor ID: ");
+    scanf("%d", &id);
+    showDoctorDetails(id);
+    break;
+  }
+  case 3:
+    listDoctorsBySpecialty();
+    break;
+  case 4:
+    searchDoctorByKeyword();
+    break;
+  case 5:
+    return;
+  default:
+    printf("Invalid choice!\n");
+  }
+}
