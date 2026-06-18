@@ -127,9 +127,8 @@ hospital_system.exe        # Windows
 ========================================
 1. Patients Module
 2. Doctors Module
-3. Appointments Module
-4. Billing Module
-5. Exit
+3. Operations Module
+4. Exit
 ========================================
 Enter your choice:
 ```
