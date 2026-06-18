@@ -1,0 +1,5 @@
+1,Dr. Sarah Ahmed,Cardiologist,9AM-2PM,1500,heart, chest pain, blood pressure
+2,Dr. Ali Khan,Dermatologist,4PM-8PM,1000,skin, acne, rash, hair loss
+3,Dr. Fatima Syed,Neurologist,10AM-3PM,2000,brain, headache, migraine, nerves
+4,Dr. Bilal Raza,Orthopedic,5PM-9PM,1200,bones, joints, fracture, back pain
+5,Dr. Usman Tariq,General Physician,8AM-1PM,800,fever, flu, cough, cold

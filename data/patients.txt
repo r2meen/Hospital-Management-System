@@ -1,0 +1,7 @@
+101,Sarah,Adams,Sarah Adams,16,Female,Headache,Steve Jobs
+111,Jane,Watson,Jane Watson,17,Male,Stomachache,Jack
+112,Rem,Lee,Rem Lee,23,Male,Dengue,Lura
+113,Sara,Adams,Sara Adams,13,Female,Malaria,Adam
+114,Ella,Ref,Ella Ref,12,Female,Malaria,Flora
+115,Ella,Watson,Ella Watson,34,Female,Malaria,Sam
+11,Larry,Jeff,Larry Jeff,32,Male,Fever,Tom1,Ria,Nia,Ria Nia,21,Female,Heart,Miss Sia
