@@ -186,7 +186,7 @@ hospital-management-system/
 
 <div align="center">
 
-| <img src="https://img.shields.io/badge/Rameen%20Zulfi-00c9a7?style=for-the-badge"/> | <img src="https://img.shields.io/badge/Eifa%20Siddiqui-3d7fff?style=for-the-badge"/> | <img src="https://img.shields.io/badge/Yusra%20Batool-ff6b6b?style=for-the-badge"/> |
+| <img src="https://img.shields.io/badge/Rameen%20Zulfi-00c9a7?style=for-the-badge"/> | <img src="https://img.shields.io/badge/Eifa%20Siddiqui-3d7fff?style=for-the-badge"/> | <img src="https://img.shields.io/badge/Yusra%20Batool%20Zaidi-ff6b6b?style=for-the-badge"/> |
 |:---:|:---:|:---:|
 | Main Menu · UI Architecture · Module Integration · Chapter 1 | Data Engine · CRUD Logic · Struct Definitions · File I/O · Chapters 2 & 3 | Billing Module · QA & Testing · Debugging · Chapters 4 & 5 |
 
